@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ďakujeme za odpoveď</title>
+<meta name="description" content="Poďakovanie za odoslanie RSVP." />
+<style>
+@font-face{
+font-family: 'Calgary';
+src: local('Calgary'); /* ak máš .woff2, doplň url('./fonts/Calgary.woff2') format('woff2') */
+font-weight: 300 800; font-style: normal; font-display: swap;
+}
+:root{
+--bg: #E9E5DF; /* krémová z hlavnej stránky */
+--ink: #262626; /* text */
+--muted:#6f6f6f;
+}
+html{scroll-behavior:smooth}
+body{
+margin:0; color:var(--ink); background:var(--bg);
+font-family:'Calgary', 'Cormorant Garamond', serif;
+line-height:1.65; min-height:100svh; display:grid; place-items:center;
+}
+/* rovnaké fixné pozadie ako na hlavnej stránke */
+body::before{
+content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+background: url('Pozadie stránky.png') center top / cover no-repeat;
+background-color: var(--bg);
+}
+.wrap{ text-align:center; padding: clamp(24px, 4vw, 48px); width:min(920px, 92vw); }
+.panel{
+background: rgba(255,255,255,.78);
+border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.06);
+padding: clamp(28px, 5vw, 56px);
+}
+.display{ letter-spacing:.22em; text-transform:uppercase }
+h1{ margin:0 0 .6rem; font-size: clamp(34px, 6vw, 54px); }
+p{ margin:.35rem 0 .9rem; }
+.names{ font-size: clamp(18px, 3vw, 22px); letter-spacing:.26em; text-transform:uppercase; color: var(--muted); }
+.btn{ display:inline-block; margin-top:18px; padding:12px 18px; border-radius:999px; border:1px solid rgba(0,0,0,.6); background:#fff; text-decoration:none; color:inherit; letter-spacing:.12em; text-transform:uppercase }
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="panel">
+<h1 class="display">Ďakujeme za odpoveď!</h1>
+<p class="names">Patrik a Sára</p>
+<!-- voliteľne: návrat na hlavnú stránku -->
+<p><a class="btn" href="./index.html">Späť na hlavnú stránku</a></p>
+</div>
+</main>
+</body>
+</html>
