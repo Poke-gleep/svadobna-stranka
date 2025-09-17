@@ -142,18 +142,105 @@ nav .lang button[aria-pressed="true"]{ opacity: 1; text-decoration: underline; }
     /* mapa */
 .map-embed{border-radius:14px; overflow:hidden; aspect-ratio:16/10; min-height:320px; background:#e7e3dc}
 .map-embed iframe{width:100%; height:100%; border:0}
+
+/* Bezpečný box model + obrana proti pretečeniu */
+*,*::before,*::after{ box-sizing: border-box }
+img,iframe{ max-width:100%; height:auto }
+
+/* Značka: plná/short verzia */
+.brand .brand-short{ display:none; }
+
+/* Hamburger tlačidlo (default skryté, zobrazíme na mobile) */
+.nav-toggle{
+  display:none; background:transparent; border:0; cursor:pointer; padding:8px; margin-left:auto;
+}
+.nav-toggle .bar{
+  display:block; width:24px; height:2px; margin:5px 0;
+  background: rgba(0,0,0,.55); border-radius:2px;
+}
+
+/* Mobilné menu panel */
+.mobile-menu{
+  position: fixed; inset:0 auto 0 0; width:min(86vw, 320px);
+  background: rgba(250,248,243,.92);
+  -webkit-backdrop-filter: blur(6px) saturate(120%); backdrop-filter: blur(6px) saturate(120%);
+  box-shadow: 8px 0 30px rgba(0,0,0,.14);
+  transform: translateX(-100%); transition: transform .28s ease;
+  z-index: 30; padding: 18px 18px 24px;
+}
+.mobile-menu.open{ transform: translateX(0); }
+.mobile-menu nav ul{ list-style:none; margin:60px 0 0; padding:0; display:grid; gap:20px }
+.mobile-menu nav a{ text-decoration:none; color:inherit; font-size:1.1rem; letter-spacing:.18em; text-transform:uppercase }
+.mobile-menu .lang button{
+  background:transparent; border:0; cursor:pointer; font:inherit; letter-spacing:.14em; text-transform:uppercase; opacity:.8;
+}
+.mobile-menu .lang button[aria-pressed="true"]{ opacity:1; text-decoration:underline }
+.mobile-menu .close{
+  position:absolute; top:12px; left:12px; width:36px; height:36px; border-radius:10px;
+  border:1px solid rgba(0,0,0,.15); background:#fff; cursor:pointer; font-size:18px; line-height:1;
+}
+
+/* Overlay s stmavením + blur */
+.overlay{
+  position: fixed; inset:0; z-index:25;
+  background: rgba(0,0,0,.25);
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  opacity:0; transition: opacity .25s ease;
+}
+.overlay.show{ opacity:1 }
+
+/* RESPONSIVE – mobil */
+@media (max-width: 640px){
+  /* toolbar menší */
+  nav.top{ height:64px; }
+  nav.top .container{ gap:10px }
+
+  /* značka: iba P&S */
+  .brand .brand-full{ display:none }
+  .brand .brand-short{ display:inline }
+
+  /* skryť desktop menu, zobraziť hamburger */
+  .nav-desktop{ display:none }
+  .nav-toggle{ display:inline-flex }
+
+  /* upraviť hero a karty pre menší displej */
+  header .inner{ padding: 100px 0 64px; }
+  .card{ padding: 20px; }
+  .grid{ gap: 18px }
+  .grid-form{ gap: 14px }
+  input,select,textarea{ padding:10px 12px; border-radius:10px; font-size:.95rem }
+  .btn{ padding:10px 18px; font-size:.9rem }
+  .map-embed{ aspect-ratio: 4/3; min-height: 260px; }
+}
+
+/* (ak ešte nemáš) okrúhle checkboxy */
+input[type="checkbox"]{
+  appearance:none; -webkit-appearance:none; width:18px; height:18px;
+  border:2px solid var(--ink); border-radius:50%; display:inline-block; margin-right:6px; position:relative; cursor:pointer;
+}
+input[type="checkbox"]:checked{ background:var(--ink); }
   </style>
 </head>
 <body>
   <nav class="top" aria-label="Hlavná navigácia">
   <div class="container">
-    <a href="#top" class="brand">PATRIK &amp; SÁRA</a>
-    <ul>
+    <!-- Značka: plná + krátka verzia -->
+    <a href="#top" class="brand">
+      <span class="brand-full">PATRIK &amp; SÁRA</span>
+      <span class="brand-short">P&amp;S</span>
+    </a>
+
+    <!-- Tlačidlo hamburger (zobrazí sa iba na mobile) -->
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
+
+    <!-- Desktop menu (ostáva) -->
+    <ul class="nav-desktop">
       <li><a href="#info" data-i18n="nav.info">INFORMÁCIE</a></li>
       <li><a href="#program" data-i18n="nav.program">PROGRAM</a></li>
       <li><a href="#miesto" data-i18n="nav.place">MIESTO</a></li>
       <li><a href="#rsvp" data-i18n="nav.rsvp">RSVP</a></li>
-      <!-- prepínač jazyka -->
       <li class="lang">
         <button id="lang-sk" type="button" aria-pressed="true">SK</button> /
         <button id="lang-en" type="button" aria-pressed="false">EN</button>
@@ -161,6 +248,24 @@ nav .lang button[aria-pressed="true"]{ opacity: 1; text-decoration: underline; }
     </ul>
   </div>
 </nav>
+
+<!-- Mobilné menu + overlay (pridaj hneď za nav) -->
+<div id="overlay" class="overlay" hidden></div>
+<aside id="mobileMenu" class="mobile-menu" aria-hidden="true">
+  <button class="close" id="menuClose" aria-label="Close menu">✕</button>
+  <nav>
+    <ul>
+      <li><a href="#info" data-i18n="nav.info">INFORMÁCIE</a></li>
+      <li><a href="#program" data-i18n="nav.program">PROGRAM</a></li>
+      <li><a href="#miesto" data-i18n="nav.place">MIESTO</a></li>
+      <li><a href="#rsvp" data-i18n="nav.rsvp">RSVP</a></li>
+      <li class="lang">
+        <button id="lang-sk-m" type="button" aria-pressed="true">SK</button> /
+        <button id="lang-en-m" type="button" aria-pressed="false">EN</button>
+      </li>
+    </ul>
+  </nav>
+</aside>
 
   <header id="top">
     <div class="container inner" data-reveal>
@@ -492,6 +597,61 @@ nav .lang button[aria-pressed="true"]{ opacity: 1; text-decoration: underline; }
   }
   attendance?.addEventListener('change', toggleAlcoholField);
   toggleAlcoholField();
+
+  // --- Mobilné menu ---
+const navToggle = document.getElementById('navToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+const overlay = document.getElementById('overlay');
+const menuClose = document.getElementById('menuClose');
+
+function openMenu(){
+  mobileMenu.classList.add('open');
+  overlay.hidden = false;
+  requestAnimationFrame(()=> overlay.classList.add('show'));
+  navToggle.setAttribute('aria-expanded','true');
+  mobileMenu.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden'; // zamedzí posunu podkladu
+}
+function closeMenu(){
+  mobileMenu.classList.remove('open');
+  overlay.classList.remove('show');
+  navToggle.setAttribute('aria-expanded','false');
+  mobileMenu.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+  setTimeout(()=> overlay.hidden = true, 250);
+}
+
+navToggle?.addEventListener('click', openMenu);
+menuClose?.addEventListener('click', closeMenu);
+overlay?.addEventListener('click', closeMenu);
+window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
+
+// zavrieť menu po kliknutí na položku (kotvu)
+mobileMenu.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', closeMenu);
+});
+
+// --- prepínač jazyka v mobile (zrkadlí desktop) ---
+document.getElementById('lang-sk-m')?.addEventListener('click', ()=>{
+  setLang('sk');
+  history.replaceState(null,'',location.pathname+'?lang=sk'+location.hash);
+  // zmena jazyka sa aplikuje aj na desktopové tlačidlá:
+  document.getElementById('lang-sk')?.setAttribute('aria-pressed','true');
+  document.getElementById('lang-en')?.setAttribute('aria-pressed','false');
+  document.getElementById('lang-sk-m')?.setAttribute('aria-pressed','true');
+  document.getElementById('lang-en-m')?.setAttribute('aria-pressed','false');
+  closeMenu();
+});
+document.getElementById('lang-en-m')?.addEventListener('click', ()=>{
+  setLang('en');
+  history.replaceState(null,'',location.pathname+'?lang=en'+location.hash);
+  document.getElementById('lang-sk')?.setAttribute('aria-pressed','false');
+  document.getElementById('lang-en')?.setAttribute('aria-pressed','true');
+  document.getElementById('lang-sk-m')?.setAttribute('aria-pressed','false');
+  document.getElementById('lang-en-m')?.setAttribute('aria-pressed','true');
+  closeMenu();
+});
+
 </script>
 </body>
 </html>
