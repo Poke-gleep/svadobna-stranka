@@ -219,6 +219,45 @@ input[type="checkbox"]{
   border:2px solid var(--ink); border-radius:50%; display:inline-block; margin-right:6px; position:relative; cursor:pointer;
 }
 input[type="checkbox"]:checked{ background:var(--ink); }
+/* tlačidlo burgera */
+.nav-toggle{
+  display:none; background:transparent; border:0; cursor:pointer; padding:8px; margin-left:auto;
+}
+
+/* DÔLEŽITÉ: stĺpcovo, nech sú čiary pod sebou */
+.nav-toggle{ display:none; }
+@media (max-width:640px){
+  .nav-toggle{ display:flex; flex-direction:column; gap: 0px; align-items:center; justify-content:center; }
+}
+
+.nav-toggle .bar{
+  display:block; width:25px; height: 1px;
+  background: rgba(0,0,0,.55); border-radius:2px;
+}
+
+/* default desktop môže zostať v jednom riadku */
+.names { white-space: nowrap; }
+
+/* na mobile rozbiť na 3 riadky */
+@media (max-width:640px){
+  .names { white-space: normal; }
+  .names .n-first, .names .amp, .names .n-last { display:block; }
+  .names .amp { margin: .1em 0; } /* jemná medzera medzi riadkami */
+}
+
+@media (max-width:640px){
+  /* nech sú všetky gridy 1 stĺpec */
+  .grid { grid-template-columns: 1fr !important; gap: 18px; }
+  .container { padding: 0 16px; }
+  .card { width:100%; padding: 20px; }
+  input,select,textarea { max-width:100%; } /* nič nepretiekne */
+}
+@media (max-width:640px){
+  .nav-desktop{ display:none; }
+  .nav-toggle{ display:flex; } /* z bodu 1 */
+  .brand .brand-full{ display:none; }
+  .brand .brand-short{ display:inline; }
+}
   </style>
 </head>
 <body>
@@ -269,7 +308,12 @@ input[type="checkbox"]:checked{ background:var(--ink); }
 
   <header id="top">
     <div class="container inner" data-reveal>
-      <div class="display names" data-i18n="hero.names">PATRIK <span class="amp">&</span> SÁRA</div>
+      <div class="display names" data-i18n="hero.names">
+  <span class="n-first">PATRIK</span>
+  <span class="amp">&</span>
+  <span class="n-last">SÁRA</span>
+</div>
+
       <p class="date" data-i18n="hero.date">Sobota, 25. október 2025 · 13:30</p>
       <p class="hint" data-i18n="hero.ceremony">Dóm sv. Alžbety, Košice</p>
       <p class="hint" data-i18n="hero.reception">Kaštieľ Petrovany, Petrovany</p>
@@ -288,7 +332,7 @@ input[type="checkbox"]:checked{ background:var(--ink); }
           <p class="hint" data-i18n="info.dress">Dress code: elegantný</p>
         </div>
         <div class="card" data-reveal>
-          <h2 class="display" data-i18n="program.title">Harmonogram dňa</h2>
+          <h2 class="display" id="program" data-i18n="program.title">Harmonogram dňa</h2>
           <div class="timeline">
             <div class="tl-item"><span data-i18n="program.t1"><strong>13:30</strong> – Obrad v Dóme sv. Alžbety</span></div>
             <div class="tl-item"><span data-i18n="program.t2"><strong>15:00</strong> – Welcome drink v Kaštieli</span></div>
@@ -628,7 +672,16 @@ window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
 // zavrieť menu po kliknutí na položku (kotvu)
 mobileMenu.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click', closeMenu);
+  a.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const target = a.getAttribute('href');
+    closeMenu();
+    // po zatvorení menu počkaj jeden frame a scrollni
+    requestAnimationFrame(()=>{
+      const el = document.querySelector(target);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
 });
 
 // --- prepínač jazyka v mobile (zrkadlí desktop) ---
@@ -655,3 +708,4 @@ document.getElementById('lang-en-m')?.addEventListener('click', ()=>{
 </script>
 </body>
 </html>
+
