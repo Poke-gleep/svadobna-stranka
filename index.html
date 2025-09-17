@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Patrik & Sára – Svadba</title>
+  <meta name="description" content="Svadobné informácie a RSVP – akvarelový botanický štýl, fixné pozadie, Calgary." />
+  <!-- Ak máte súbor písma Calgary, vložte ho sem a upravte src: -->
+  <style>
+    @font-face{
+      font-family: 'Calgary';
+      src: local('Calgary'); /* TODO: nahraďte napr. url('./fonts/Calgary.woff2') format('woff2') */
+      font-weight: 300 800;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root{
+      --bg: #E9E5DF;           /* krémový podklad pre prípad nenahratia obrázku */
+      --ink: #262626;          /* text */
+      --muted: #6f6f6f;
+      --paper: rgba(255,255,255,.78); /* jemne priesvitné karty, aby presvitalo pozadie */
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.06);
+      --maxw: 1100px;
+    }
+
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; color:var(--ink); background: var(--bg);
+      /* Globálne písmo – Calgary s fallbackom */
+      font-family: 'Calgary', 'Cormorant Garamond', serif;
+      line-height:1.65;
+    }
+    /* Fixný akvarelový background z dodaného súboru – nehýbe sa pri scrolle */
+    body::before{
+      content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+      background: url('Pozadie stránky.png') center top / cover no-repeat; /* súbor s pozadím */
+      background-color: var(--bg); /* fallback farba */
+    }
+
+    .grid-form {
+  display: grid;
+  gap: 16px;   /* medzera medzi riadkami aj stĺpcami */
+}
+/* Lepší offset pri kotvách so sticky toolbarom */
+section { scroll-margin-top: 100px; }
+
+input[type="checkbox"]{
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;  /* okrúhle */
+  display:inline-block; margin-right:6px;
+  position: relative; cursor:pointer;
+}
+input[type="checkbox"]:checked{
+  background: var(--ink);
+}
+
+/* Jemnejšie paddingy na mobile a toolbar úpravy */
+@media (max-width: 640px){
+  nav.top{ height:64px; }
+  nav ul{ gap:18px; font-size:.9rem; }
+  .brand{ letter-spacing:.18em; font-size: 16px; }
+  header .inner{ padding: 110px 0 70px; }
+  section{ padding: 64px 0; }
+  .card{ padding: 22px; }
+  .grid{ gap: 20px; }
+}
+
+/* RSVP velky štvorec */
+.grid{display:grid; gap:30px}
+@media (min-width: 840px){.grid.cols-2{grid-template-columns: 1fr 1fr}}
+
+.grid.cols-1{ grid-template-columns: 1fr; }
+
+/* Mapa – nech je použiteľná aj na menších obrazovkách */
+.map-embed{ aspect-ratio: 4/3; min-height: 260px; }
+
+    /* Toolbar podľa náhľadu */
+    nav.top{
+      position:fixed; inset:0 0 auto 0; height:84px; display:flex; align-items:center; z-index:20;
+      background: rgba(250,248,243,.92); /* krémový pás */
+      box-shadow: 0 14px 28px rgba(0,0,0,.05); /* veľmi jemný tieň pod toolbarom */
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      -webkit-backdrop-filter: saturate(140%) blur(2px);
+      backdrop-filter: saturate(140%) blur(2px);
+    }
+    nav .lang button{
+  background: transparent; border: 0; cursor: pointer;
+  font: inherit; text-transform: uppercase; letter-spacing: .14em;
+  opacity: .7; padding: 0 2px;
+}
+nav .lang button[aria-pressed="true"]{ opacity: 1; text-decoration: underline; }
+    nav.top .container{max-width:var(--maxw); margin:0 auto; padding:0 24px; width:100%; display:flex; align-items:center; justify-content:space-between}
+    nav a{color:inherit; text-decoration:none}
+    .brand{font-size: clamp(18px, 2.3vw, 22px); letter-spacing:.28em; text-transform:uppercase; font-weight:400}
+    nav ul{list-style:none; display:flex; gap:42px; margin:0; padding:0}
+    nav ul a{letter-spacing:.16em; text-transform:uppercase; font-weight:400}
+
+    .container{max-width:var(--maxw); margin:0 auto; padding: 0 24px}
+    header{min-height: 86vh; display:grid; place-items:center; text-align:center}
+    header .inner{padding: 140px 0 90px}
+
+    /* Typografia */
+    .display{letter-spacing:.22em; text-transform:uppercase}
+    h1,h2,h3{margin:0 0 .6rem}
+    h1{font-size: clamp(42px, 6vw, 64px)}
+    h2{font-size: clamp(28px, 4vw, 40px)}
+    p{margin:.35rem 0 .9rem}
+
+    .names{font-size: clamp(50px, 8vw, 92px); letter-spacing:.26em}
+    .amp{display:inline-block; margin:0 .26em}
+    .date{color:var(--muted); letter-spacing:.28em; text-transform:uppercase}
+    .btn{appearance:none; border:1px solid rgba(0,0,0,.6); border-radius:999px; padding:14px 22px; background:#fff; cursor:pointer; transition:.2s ease; font-weight:600; text-transform:uppercase; letter-spacing:.14em}
+    .btn:hover{transform:translateY(-1px); box-shadow: var(--shadow)}
+
+    section{position:relative; padding: 90px 0}
+    .card{background:var(--paper); border-radius:var(--radius); box-shadow: var(--shadow); padding: 34px;}
+    .grid{display:grid; gap:30px}
+    @media (min-width: 840px){.grid.cols-2{grid-template-columns: 1fr 1fr}}
+
+    /* RSVP formulár */
+    form{display:grid; gap:16px}
+    label{font-weight:600}
+    input, select, textarea{width:100%; padding:2px 4px; border-radius:2px; border:1px solid rgba(0,0,0,.12); background:#fff; font: inherit}
+    fieldset{border:1px solid rgba(0,0,0,.08); border-radius:12px; padding:14px 16px}
+    fieldset legend{padding:0 8px; opacity:.9}
+    .hint{color:var(--muted); font-size:.95rem}
+    .inline{display:flex; gap:10px; align-items:center}
+    .grid-form{display:grid; gap:16px}
+    @media(min-width:780px){.grid-form{grid-template-columns: 1fr 1fr}.grid-form>.full{grid-column:1/-1}}
+
+    footer{padding:60px 0 100px; text-align:center; color:var(--muted)}
+
+    /* Jemné animácie pri scrolle */
+    [data-reveal]{opacity:0; translate: 0 10px; transition: .6s ease}
+    [data-reveal].show{opacity:1; translate:0 0}
+    
+    /* mapa */
+.map-embed{border-radius:14px; overflow:hidden; aspect-ratio:16/10; min-height:320px; background:#e7e3dc}
+.map-embed iframe{width:100%; height:100%; border:0}
+  </style>
+</head>
+<body>
+  <nav class="top" aria-label="Hlavná navigácia">
+  <div class="container">
+    <a href="#top" class="brand">PATRIK &amp; SÁRA</a>
+    <ul>
+      <li><a href="#info" data-i18n="nav.info">INFORMÁCIE</a></li>
+      <li><a href="#program" data-i18n="nav.program">PROGRAM</a></li>
+      <li><a href="#miesto" data-i18n="nav.place">MIESTO</a></li>
+      <li><a href="#rsvp" data-i18n="nav.rsvp">RSVP</a></li>
+      <!-- prepínač jazyka -->
+      <li class="lang">
+        <button id="lang-sk" type="button" aria-pressed="true">SK</button> /
+        <button id="lang-en" type="button" aria-pressed="false">EN</button>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <header id="top">
+    <div class="container inner" data-reveal>
+      <div class="display names" data-i18n="hero.names">PATRIK <span class="amp">&</span> SÁRA</div>
+      <p class="date" data-i18n="hero.date">Sobota, 25. október 2025 · 13:30</p>
+      <p class="hint" data-i18n="hero.ceremony">Dóm sv. Alžbety, Košice</p>
+      <p class="hint" data-i18n="hero.reception">Kaštieľ Petrovany, Petrovany</p>
+      <div class="cta">
+        <a href="#rsvp" class="btn" data-i18n="hero.cta">Potvrdiť účasť (RSVP)</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="info">
+      <div class="container grid cols-2">
+        <div class="card" data-reveal>
+          <h2 class="display" data-i18n="info.title">Informácie</h2>
+          <p data-i18n="info.text">S radosťou vás pozývame k svadobnému stolu. Prosíme, potvrďte účasť cez formulár nižšie a dajte nám vedieť aj vaše preferencie ohľadom nápojov a dopravy.</p>
+          <p class="hint" data-i18n="info.dress">Dress code: elegantný</p>
+        </div>
+        <div class="card" data-reveal>
+          <h2 class="display" data-i18n="program.title">Harmonogram dňa</h2>
+          <div class="timeline">
+            <div class="tl-item"><span data-i18n="program.t1"><strong>13:30</strong> – Obrad v Dóme sv. Alžbety</span></div>
+            <div class="tl-item"><span data-i18n="program.t2"><strong>15:00</strong> – Welcome drink v Kaštieli</span></div>
+            <div class="tl-item"><span data-i18n="program.t3"><strong>16:00</strong> – Fotenie & prípitok</span></div>
+            <div class="tl-item"><span data-i18n="program.t4"><strong>16:30</strong> – Večera</span></div>
+            <div class="tl-item"><span data-i18n="program.t5"><strong>17:00</strong> – Prvý tanec & párty</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="miesto">
+      <div class="container grid cols-2">
+        <div class="card" data-reveal>
+          <h2 class="display" data-i18n="place.title">Miesto</h2>
+<p data-i18n="place.venue"><strong>Kaštieľ Petrovany</strong><br>Petrovany</p>
+          <p class="hint" data-i18n="place.parking">Parkovanie je možné pred areálom kaštieľa. Ak prídete autom a máte voľné miesta, označte to v RSVP.</p>
+        </div>
+        <div class="card" data-reveal>
+          <h2 class="display" data-i18n="map.title">Mapa</h2>
+          <div class="map-embed">
+  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2413.615333180042!2d21.257312776022886!3d48.91801759650907!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473eef8ffdb763b1%3A0xdcbe67d7dc22b57f!2zS2HFoXRpZcS-IFBldHJvdmFueQ!5e1!3m2!1ssk!2sch!4v1758020229295!5m2!1ssk!2sch" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+           </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rsvp">
+  <div class="container grid cols-1">
+    <div class="card" data-reveal>
+
+<h2 class="display" data-i18n="rsvp.title">RSVP</h2> <p data-i18n="rsvp.deadline">Prosíme, vyplňte formulár najneskôr do <strong>5. 10.</strong></p> <form action="https://formsubmit.co/sara.patricius@gmail.com" method="POST" novalidate>
+  <!-- Formsubmit nastavenia -->
+  <input type="hidden" name="_subject" value="Nové RSVP – Patrik & Sára" />
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_captcha" value="false" />
+  <!-- po odoslaní návrat späť na sekciu RSVP (môžeš zmeniť na ďakovaciu stránku) -->
+  <input type="hidden" name="_next" value="http://127.0.0.1:3000/dakujeme.html">
+
+  <div class="grid-form">
+  <div>
+    <label for="name">Meno a priezvisko *</label>
+    <input id="name" name="name" required autocomplete="name" />
+  </div>
+
+    <div>
+    <label for="email">E-mail *</label>
+    <input id="email" name="email" type="email" required autocomplete="email" />
+  </div>
+
+    <div>
+      <label for="guests" data-i18n="form.guests.label">Počet osôb *</label>
+      <select id="guests" name="guests" required>
+        <option value="" disabled selected data-i18n="form.select">Vyberte…</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="attendance" data-i18n="form.attendance.label">Účasť *</label>
+      <select id="attendance" name="attendance">
+        <option value="" disabled selected data-i18n="form.select">Vyberte…</option>
+  <option value="Prídem" data-i18n="form.attendance.yes">Prídem</option>
+  <option value="Žiaľ neprídem" data-i18n="form.attendance.no">Žiaľ neprídem</option>
+</select>
+    </div>
+
+    <fieldset class="full" id="alcoholField">
+      <legend data-i18n="form.drinks.legend">Preferovaný nápoj</legend>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px"></div>
+<label class="inline"><input type="checkbox" name="alcohol[]" value="Pivo"><span data-i18n="form.drinks.beer">Pivo</span></label>
+<label class="inline"><input type="checkbox" name="alcohol[]" value="Víno biele"><span data-i18n="form.drinks.white">Víno biele</span></label>
+<label class="inline"><input type="checkbox" name="alcohol[]" value="Prosecco"><span data-i18n="form.drinks.prosecco">Prosecco</span></label>
+<label class="inline"><input type="checkbox" name="alcohol[]" value="Destiláty"><span data-i18n="form.drinks.spirits">Destiláty</span></label>
+<label class="inline"><input type="checkbox" name="alcohol[]" value="Nealko"><span data-i18n="form.drinks.na">Nealko</span></label>
+<label for="alcoholNote" class="hint" data-i18n="form.drinks.noteLbl">Konkrétny tip (značka, druh)…</label>
+<input id="alcoholNote" name="alcohol_note" placeholder="napr. suché biele, gin &amp; tonic…" data-i18n-placeholder="form.drinks.notePh" />
+      </div>
+    </fieldset>
+
+    <fieldset class="full">
+  <legend data-i18n="form.transport.legend">Doprava</legend>
+  <div class="grid cols-2">
+    <div>
+      <label for="byCar" data-i18n="form.transport.bycar">Prídem autom?</label>
+      <select id="byCar" name="by_car">
+        <option value="" selected data-i18n="form.select">Neviem/nespomenuté</option>
+        <option value="Áno" data-i18n="form.yes">Áno</option>
+        <option value="Nie" data-i18n="form.no">Nie</option>
+      </select>
+    </div>
+    <div>
+      <label for="seats" data-i18n="form.transport.seats">Voľné miesta v aute</label>
+      <input id="seats" name="seats" type="number" min="0" step="1" inputmode="numeric" placeholder="0" />
+    </div>
+  </div>
+</fieldset>
+
+    <div class="full">
+      <label for="diet" data-i18n="form.diet">Špeciálna strava / alergie</label>
+      <textarea id="diet" name="diet" rows="3" 
+  placeholder="napr. bezlepková, vegetarián…" 
+  data-i18n-placeholder="form.dietPh"></textarea>
+    </div>
+
+    <div class="full">
+      <label for="note" data-i18n="form.note">Poznámka</label>
+      <textarea id="note" name="note" rows="3"></textarea>
+    </div>
+
+    <div class="full">
+      <button class="btn" type="submit" data-i18n="form.submit">Odoslať RSVP</button>
+    </div>
+    <p class="hint" id="formMsg" aria-live="polite" 
+   data-i18n="form.status">
+  Po odoslaní budete presmerovaný naspäť na túto stránku.
+</p>
+  <p class="hint" data-i18n="form.privacy">Vaše údaje budú použité len na účely organizácie svadby.</p>
+  </div>
+
+</div>
+<section id="gifts">
+  <div class="container grid cols-1">
+    <div class="card" data-reveal style="text-align:center">
+      <h2 class="display" data-i18n="gifts.title">Darčeky</h2>
+      <p data-i18n="gifts.text">
+        Vaša prítomnosť je pre nás ten najkrajší dar. 
+        Ak nás chcete potešiť, uvítame príspevok pre našu spoločnú budúcnosť.
+      </p>
+    </div>
+  </div>
+</section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p class="display" style="font-size:1rem" data-i18n="footer.thanks">Ďakujeme, že to oslávite s nami</p>
+      <div class="display" style="font-size:22px; letter-spacing:.24em">Patrik a Sára</div>
+    </div>
+  </footer>
+
+  <script>
+  // --- I18N SLOVNÍK ---
+  const I18N = {
+    sk: {
+      "nav.info":"INFORMÁCIE","nav.program":"PROGRAM","nav.place":"MIESTO","nav.rsvp":"RSVP",
+      "hero.names":"PATRIK <span class='amp'>&</span> SÁRA",
+      "hero.date":"Sobota, 25. október 2025 · 13:30",
+      "hero.ceremony":"Dóm sv. Alžbety, Košice",
+      "hero.reception":"Kaštieľ Petrovany, Petrovany",
+      "hero.cta":"Potvrdiť účasť (RSVP)",
+      "form.status":"Po odoslaní budete presmerovaný naspäť na túto stránku.",
+      "info.title":"Informácie",
+      "form.dietPh":"napr. bezlepková, vegetarián…",
+      "info.text":"S radosťou vás pozývame k svadobnému stolu. Prosíme, potvrďte účasť cez formulár nižšie a dajte nám vedieť aj vaše preferencie ohľadom nápojov a dopravy.",
+      "info.dress":"Dress code: elegantný",
+      "program.title":"Harmonogram dňa",
+      "program.t1":"<strong>13:30</strong> – Obrad v Dóme sv. Alžbety",
+      "program.t2":"<strong>15:00</strong> – Welcome drink v Kaštieli",
+      "program.t3":"<strong>16:00</strong> – Fotenie & prípitok",
+      "program.t4":"<strong>16:30</strong> – Večera",
+      "program.t5":"<strong>17:00</strong> – Prvý tanec & párty",
+      "place.title":"Miesto",
+      "place.venue":"<strong>Kaštieľ Petrovany</strong><br>Petrovany",
+      "place.parking":"Parkovanie je možné pred areálom kaštieľa. Ak prídete autom a máte voľné miesta, označte to v RSVP.",
+      "rsvp.title":"RSVP",
+      "map.title":"Mapa",
+"footer.thanks":"Ďakujeme, že to oslávite s nami",
+      "rsvp.deadline":"Prosíme, vyplňte formulár najneskôr do <strong>5. 10.</strong>",
+      "form.name.label":"Meno a priezvisko *",
+      "form.email.label":"E-mail *",
+      "form.guests.label":"Počet osôb *",
+      "form.attendance.label":"Účasť *",
+      "form.attendance.yes":"Prídem",
+      "form.attendance.no":"Žiaľ neprídem",
+      "form.select":"Vyberte…",
+      "form.drinks.legend":"Preferovaný nápoj",
+      "form.drinks.beer":"Pivo","form.drinks.white":"Víno biele","form.drinks.prosecco":"Prosecco","form.drinks.spirits":"Destiláty","form.drinks.na":"Nealko",
+      "form.drinks.noteLbl":"Konkrétny tip (značka, druh)…",
+      "form.drinks.notePh":"napr. suché biele, gin & tonic…",
+      "form.transport.legend":"Doprava",
+      "form.transport.bycar":"Prídem autom?",
+      "form.transport.seats":"Voľné miesta v aute",
+      "form.yes":"Áno","form.no":"Nie",
+      "form.diet":"Špeciálna strava / alergie",
+      "form.note":"Poznámka",
+      "form.submit":"Odoslať RSVP",
+      "form.privacy":"Vaše údaje budú použité len na účely organizácie svadby.",
+      "gifts.title":"Darčeky",
+      "gifts.text":"Vaša prítomnosť je pre nás ten najkrajší dar. Ak nás chcete potešiť, uvítame príspevok pre našu spoločnú budúcnosť."
+    },
+    en: {
+      "nav.info":"INFO","nav.program":"SCHEDULE","nav.place":"VENUE","nav.rsvp":"RSVP",
+      "hero.names":"PATRIK <span class='amp'>&</span> SÁRA",
+      "hero.date":"Saturday, October 25, 2025 · 1:30 PM",
+      "hero.ceremony":"St. Elizabeth Cathedral, Košice",
+      "form.dietPh":"e.g., gluten-free, vegetarian…",
+      "hero.reception":"Petrovany Manor, Petrovany",
+      "form.status":"After submission you will be redirected back to this page.",
+      "hero.cta":"Confirm attendance (RSVP)",
+      "info.title":"Information",
+      "info.text":"We warmly invite you to celebrate with us. Please RSVP below and let us know your drink preferences and transport.",
+      "info.dress":"Dress code: elegant",
+      "program.title":"Schedule",
+      "program.t1":"<strong>13:30</strong> – Ceremony at St. Elizabeth Cathedral",
+      "program.t2":"<strong>15:00</strong> – Welcome drink at the Manor",
+      "program.t3":"<strong>16:00</strong> – Photos & toast",
+      "program.t4":"<strong>16:30</strong> – Dinner",
+      "program.t5":"<strong>17:00</strong> – First dance & party",
+      "place.title":"Venue",
+      "place.venue":"<strong>Petrovany Manor</strong><br>Petrovany",
+      "place.parking":"Parking is available in front of the manor. If you come by car and have spare seats, let us know in the RSVP.",
+      "rsvp.title":"RSVP",
+      "rsvp.deadline":"Please submit your RSVP by <strong>Oct 5</strong>.",
+      "form.name.label":"Full name *",
+      "map.title":"Map",
+"footer.thanks":"Thank you for celebrating with us",
+      "form.email.label":"E-mail *",
+      "form.guests.label":"Number of guests *",
+      "form.attendance.label":"Attendance *",
+      "form.attendance.yes":"I will attend",
+      "form.attendance.no":"I’m not able to attend",
+      "form.select":"Select…",
+      "form.drinks.legend":"Preferred drink",
+      "form.drinks.beer":"Beer","form.drinks.white":"White wine","form.drinks.prosecco":"Prosecco","form.drinks.spirits":"Spirits","form.drinks.na":"Non-alcoholic",
+      "form.drinks.noteLbl":"Specific tip (brand, type)…",
+      "form.drinks.notePh":"e.g., dry white, gin & tonic…",
+      "form.transport.legend":"Transport",
+      "form.transport.bycar":"Will you come by car?",
+      "form.transport.seats":"Free seats in car",
+      "form.yes":"Yes","form.no":"No",
+      "form.diet":"Dietary needs / allergies",
+      "form.note":"Note",
+      "form.submit":"Submit RSVP",
+      "form.privacy":"Your data will be used only for wedding organization.",
+      "gifts.title":"Gifts",
+      "gifts.text":"Your presence is the most precious gift. If you wish, a contribution to our future together is appreciated."
+    }
+  };
+
+  function setLang(lang){
+    const dict = I18N[lang] || I18N.sk;
+    document.documentElement.setAttribute('lang', lang);
+    // text nodes
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.getAttribute('data-i18n');
+      if(!dict[key]) return;
+      // niekde potrebujeme HTML (napr. <strong>), preto použijeme innerHTML
+      el.innerHTML = dict[key];
+    });
+    // placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+      const key = el.getAttribute('data-i18n-placeholder');
+      if(dict[key]) el.setAttribute('placeholder', dict[key]);
+    });
+    // prepínač aria-pressed
+    document.getElementById('lang-sk')?.setAttribute('aria-pressed', lang==='sk' ? 'true':'false');
+    document.getElementById('lang-en')?.setAttribute('aria-pressed', lang==='en' ? 'true':'false');
+  }
+
+  // Inicializácia: podľa ?lang=en alebo default SK
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  let currentLang = (urlLang === 'en') ? 'en' : 'sk';
+  setLang(currentLang);
+
+  // Handlery prepínača
+  document.getElementById('lang-sk')?.addEventListener('click', ()=>{
+    currentLang = 'sk'; setLang('sk'); history.replaceState(null,'',location.pathname+'?lang=sk'+location.hash);
+  });
+  document.getElementById('lang-en')?.addEventListener('click', ()=>{
+    currentLang = 'en'; setLang('en'); history.replaceState(null,'',location.pathname+'?lang=en'+location.hash);
+  });
+
+  // Odhaľovanie sekcií pri scrolle
+  const ro = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show') })
+  },{threshold:.12});
+  document.querySelectorAll('[data-reveal]').forEach(el=>ro.observe(el));
+
+  // UX logika formulára (len vypínanie políčok)
+  const byCar = document.getElementById('byCar');
+  const seats = document.getElementById('seats');
+  const attendance = document.getElementById('attendance');
+
+  function updateSeatsState(){
+    if (!byCar || !seats) return;
+    const val = byCar.value;
+    seats.disabled = (val !== 'Áno');  // bolo 'yes', teraz 'Áno'
+    if (seats.disabled) seats.value = '';
+  }
+  byCar?.addEventListener('change', updateSeatsState);
+  updateSeatsState();
+
+  function toggleAlcoholField(){
+    const field = document.getElementById('alcoholField');
+    if (!field || !attendance) return;
+    const off = (attendance.value === 'Žiaľ neprídem'); // bolo 'no'
+    field.style.opacity = off ? .4 : 1;
+    field.querySelectorAll('input').forEach(i=> i.disabled = off);
+  }
+  attendance?.addEventListener('change', toggleAlcoholField);
+  toggleAlcoholField();
+</script>
+</body>
+</html>
