@@ -7,13 +7,15 @@
   <meta name="description" content="Svadobné informácie a RSVP – akvarelový botanický štýl, fixné pozadie, Calgary." />
   <!-- Ak máte súbor písma Calgary, vložte ho sem a upravte src: -->
   <style>
-    @font-face{
-      font-family: 'Calgary';
-      src: local('Calgary'); /* TODO: nahraďte napr. url('./fonts/Calgary.woff2') format('woff2') */
-      font-weight: 300 800;
-      font-style: normal;
-      font-display: swap;
-    }
+   
+    @font-face {
+  font-family: 'Calgary';
+  src: url('./fonts/Calgary.woff2') format('woff2'),
+       url('./fonts/Calgary.woff') format('woff'); /* fallback */
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: swap;
+}
 
     :root{
       --bg: #E9E5DF;           /* krémový podklad pre prípad nenahratia obrázku */
@@ -739,6 +741,7 @@ document.getElementById('lang-en-m')?.addEventListener('click', ()=>{
 </script>
 </body>
 </html>
+
 
 
 
