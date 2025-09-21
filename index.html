@@ -329,7 +329,7 @@ input[type="checkbox"]:checked{ background:var(--ink); }
         <div class="card" data-reveal>
           <h2 class="display" data-i18n="info.title">Informácie</h2>
           <p data-i18n="info.text">S radosťou vás pozývame k svadobnému stolu. Prosíme, potvrďte účasť cez formulár nižšie a dajte nám vedieť aj vaše preferencie ohľadom nápojov a dopravy.</p>
-          <p class="hint" data-i18n="info.dress">Dress code: elegantný</p>
+          <p class="hint" data-i18n="info.dress">Dress code: </p>
         </div>
         <div class="card" data-reveal>
           <h2 class="display" id="program" data-i18n="program.title">Harmonogram dňa</h2>
@@ -365,6 +365,39 @@ input[type="checkbox"]:checked{ background:var(--ink); }
       </div>
     </section>
 
+       <section id="extra">
+  <div class="container grid cols-2">
+    <!-- Ubytovanie -->
+    <div class="card" data-reveal>
+      <h2 class="display" data-i18n="accommodation.title">Ubytovanie</h2>
+      <p data-i18n="accommodation.text">
+        Prosíme, aby ste si zabezpečili ubytovanie vo vlastnej réžii.
+      </p>
+    </div>
+
+    <!-- Pesnička -->
+    <div class="card" data-reveal>
+      <h2 class="display" data-i18n="song.title">Tento song nesmie chýbať!</h2>
+      <p data-i18n="song.text">Vaša obľúbená pesnička:</p>
+      <input type="text" name="fav_song" id="fav_song" placeholder="napr. ABBA - Dancing Queen" data-i18n-placeholder="song.placeholder" />
+    </div>
+  </div>
+</section>
+
+
+<section id="gifts">
+  <div class="container grid cols-1">
+    <div class="card" data-reveal style="text-align:center">
+      <h2 class="display" data-i18n="gifts.title">Darčeky</h2>
+      <p data-i18n="gifts.text">
+        Vaša prítomnosť je pre nás ten najkrajší dar. 
+        Ak nás chcete potešiť, uvítame príspevok pre našu spoločnú budúcnosť.
+      </p>
+    </div>
+  </div>
+</section>
+
+
     <section id="rsvp">
   <div class="container grid cols-1">
     <div class="card" data-reveal>
@@ -379,7 +412,7 @@ input[type="checkbox"]:checked{ background:var(--ink); }
 
   <div class="grid-form">
   <div>
-    <label for="name"data-i18n="form.name.label">Meno a priezvisko *</label>
+    <label for="name"data-i18n="form.name.label">Meno (rodinka, pár, jednotlivec)</label>
     <input id="name" name="name" required autocomplete="name" />
   </div>
 
@@ -388,16 +421,7 @@ input[type="checkbox"]:checked{ background:var(--ink); }
     <input id="email" name="email" type="email" required autocomplete="email" />
   </div>
 
-    <div>
-      <label for="guests" data-i18n="form.guests.label">Počet osôb *</label>
-      <select id="guests" name="guests" required>
-        <option value="" disabled selected data-i18n="form.select">Vyberte…</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select>
-    </div>
+
 
     <div>
       <label for="attendance" data-i18n="form.attendance.label">Účasť *</label>
@@ -416,7 +440,7 @@ input[type="checkbox"]:checked{ background:var(--ink); }
 <label class="inline"><input type="checkbox" name="alcohol[]" value="Prosecco"><span data-i18n="form.drinks.prosecco">Prosecco</span></label>
 <label class="inline"><input type="checkbox" name="alcohol[]" value="Destiláty"><span data-i18n="form.drinks.spirits">Destiláty</span></label>
 <label class="inline"><input type="checkbox" name="alcohol[]" value="Nealko"><span data-i18n="form.drinks.na">Nealko</span></label>
-<label for="alcoholNote" class="hint" data-i18n="form.drinks.noteLbl">Konkrétny tip destilátu (druh)…</label>
+<label for="alcoholNote" class="hint" data-i18n="form.drinks.noteLbl">Konkrétny typ destilátu (druh)…</label>
 <input id="alcoholNote" name="alcohol_note" placeholder="napr. whiskey, rum, tatra-tea..." data-i18n-placeholder="form.drinks.notePh" />
       </div>
     </fieldset>
@@ -461,19 +485,6 @@ input[type="checkbox"]:checked{ background:var(--ink); }
   <p class="hint" data-i18n="form.privacy">Vaše údaje budú použité len na účely organizácie svadby.</p>
   </div>
 
-</div>
-<section id="gifts">
-  <div class="container grid cols-1">
-    <div class="card" data-reveal style="text-align:center">
-      <h2 class="display" data-i18n="gifts.title">Darčeky</h2>
-      <p data-i18n="gifts.text">
-        Vaša prítomnosť je pre nás ten najkrajší dar. 
-        Ak nás chcete potešiť, uvítame príspevok pre našu spoločnú budúcnosť.
-      </p>
-    </div>
-  </div>
-</section>
-
   </main>
 
   <footer>
@@ -514,7 +525,7 @@ input[type="checkbox"]:checked{ background:var(--ink); }
       "map.title":"Mapa",
 "footer.thanks":"Ďakujeme, že to oslávite s nami",
       "rsvp.deadline":"Prosíme, vyplňte formulár najneskôr do <strong>5. 10.</strong>",
-      "form.name.label":"Meno a priezvisko *",
+      "form.name.label":"Meno (rodinka, pár, jednotlivec)",
       "form.email.label":"E-mail *",
       "form.guests.label":"Počet osôb *",
       "form.attendance.label":"Účasť *",
@@ -562,7 +573,7 @@ input[type="checkbox"]:checked{ background:var(--ink); }
       "place.parking":"Parking is available in front of the manor. If you come by car and have spare seats, let us know in the RSVP.",
       "rsvp.title":"RSVP",
       "rsvp.deadline":"Please submit your RSVP by <strong>Oct 5</strong>.",
-      "form.name.label":"Full name *",
+      "form.name.label":"Name (family, couple, individual)",
       "map.title":"Map",
 "footer.thanks":"Thank you for celebrating with us",
       "form.email.label":"E-mail *",
@@ -717,6 +728,7 @@ document.getElementById('lang-en-m')?.addEventListener('click', ()=>{
 </script>
 </body>
 </html>
+
 
 
 
