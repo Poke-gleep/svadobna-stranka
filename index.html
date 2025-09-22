@@ -478,6 +478,16 @@ input[type="checkbox"]:checked{ background:var(--ink); }
       <textarea id="note" name="note" rows="3"></textarea>
     </div>
 
+  <div class="full">
+  <label for="fav_song" data-i18n="song.title">Tento song nesmie chýbať!</label>
+  <input 
+    id="fav_song" 
+    name="fav_song" 
+    type="text" 
+    placeholder="napr. Beatles – Hey Jude" 
+    data-i18n-placeholder="song.placeholder" />
+</div>
+
     <div class="full">
       <button class="btn" type="submit" data-i18n="form.submit">Odoslať RSVP</button>
     </div>
@@ -744,6 +754,7 @@ document.getElementById('lang-en-m')?.addEventListener('click', ()=>{
 </script>
 </body>
 </html>
+
 
 
 
